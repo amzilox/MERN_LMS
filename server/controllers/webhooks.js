@@ -77,10 +77,19 @@ export const stripeWebhooks = async (req, res) => {
   // Handle the event
   switch (event.type) {
     // CASE 1: Payment successful and checkout completed
-    case "checkout.session.completed": {
+    case "payment_intent.succeeded": {
       try {
-        const session = event.data.object;
-        const { purchaseId, userId, courseId } = session.metadata;
+        const paymentIntent = event.data.object;
+        const { purchaseId, userId, courseId } = paymentIntent.metadata;
+
+        // Validate metadata exists
+        if (!purchaseId || !userId || !courseId) {
+          console.error(
+            "Missing metadata in payment intent:",
+            paymentIntent.id
+          );
+          return res.status(400).json({ error: "Missing metadata" });
+        }
 
         // Fetch all relevant data from database
         const purchaseData = await Purchase.findById(purchaseId);

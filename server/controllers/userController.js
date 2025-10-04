@@ -55,7 +55,7 @@ export const purchaseCourse = async (req, res) => {
     const { origin } = req.headers;
     // Only for development purpose
     // In production, the browser will send the origin header
-    const baseUrl = origin || `http://localhost:${process.env.PORT || 5000}`;
+    const baseUrl = origin || `http://localhost:5173`;
 
     const { userId } = await req.auth();
     const userData = await User.findById(userId);
@@ -108,8 +108,15 @@ export const purchaseCourse = async (req, res) => {
       mode: "payment",
       metadata: {
         purchaseId: newPurchase._id.toString(),
-        userId,
-        courseId,
+        userId: userId.toString(),
+        courseId: courseId.toString(),
+      },
+      payment_intent_data: {
+        metadata: {
+          purchaseId: newPurchase._id.toString(),
+          userId: userId.toString(),
+          courseId: courseId.toString(),
+        },
       },
     });
 

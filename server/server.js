@@ -18,6 +18,15 @@ await connectCloudinary();
 
 // Middlewares
 app.use(cors());
+
+// CRITICAL: Stripe webhook MUST come BEFORE express.json()!!
+app.post(
+  "/api/stripe",
+  express.raw({ type: "application/json" }),
+  stripeWebhooks
+);
+
+// NOW apply JSON parser for all OTHER routes
 app.use(express.json());
 app.use(clerkMiddleware());
 
@@ -26,17 +35,12 @@ app.get("/", (req, res) => {
   res.send("API is running...");
 });
 app.post("/clerk", clerkwebhook);
-app.post(
-  "/api/stripe",
-  express.raw({ type: "application/json" }),
-  stripeWebhooks
-);
 app.use("/api/educator", educatorRouter);
 app.use("/api/course", courseRouter);
 app.use("/api/user", userRouter);
 
 // 404 handler (runs if no route matches)
-app.use((req, res, next) => {
+app.use((req, _, next) => {
   const error = new Error(`Can't find ${req.originalUrl} on this server!`);
   error.statusCode = 404;
   next(error);
