@@ -2,11 +2,12 @@ import express from "express";
 import cors from "cors";
 import "dotenv/config";
 import connectDB from "./configs/mongodb.js";
-import { clerkwebhook } from "./controllers/webhooks.js";
+import { clerkwebhook, stripeWebhooks } from "./controllers/webhooks.js";
 import educatorRouter from "./routes/educatorRoutes.js";
 import { clerkMiddleware } from "@clerk/express";
 import connectCloudinary from "./configs/cloudinary.js";
-import courseRouter from "./routes/courseRoute.js";
+import courseRouter from "./routes/courseRoutes.js";
+import userRouter from "./routes/userRoutes.js";
 
 // Initilize Express
 const app = express();
@@ -25,8 +26,15 @@ app.get("/", (req, res) => {
   res.send("API is running...");
 });
 app.post("/clerk", clerkwebhook);
+app.post(
+  "/api/stripe",
+  express.raw({ type: "application/json" }),
+  stripeWebhooks
+);
 app.use("/api/educator", educatorRouter);
 app.use("/api/course", courseRouter);
+app.use("/api/user", userRouter);
+
 // 404 handler (runs if no route matches)
 app.use((req, res, next) => {
   const error = new Error(`Can't find ${req.originalUrl} on this server!`);
