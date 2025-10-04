@@ -36,7 +36,7 @@ app.get("/", (req, res) => {
 });
 app.post("/clerk", clerkwebhook);
 app.use("/api/educator", educatorRouter);
-app.use("/api/course", courseRouter);
+app.use("/api/courses", courseRouter);
 app.use("/api/user", userRouter);
 
 // 404 handler (runs if no route matches)
