@@ -1,10 +1,14 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useState } from "react";
+import { useAuth, useUser } from "@clerk/clerk-react";
 import { dummyCourses } from "../assets/assets";
 
 const AppContext = createContext();
 
 const AppContextProvider = (props) => {
+  const { getToken } = useAuth();
+  const { user } = useUser();
+
   const currency = import.meta.env.VITE_CURRENCY;
 
   const [allCourses, setAllCourses] = useState([]);
@@ -25,6 +29,17 @@ const AppContextProvider = (props) => {
     fetchAllCourses();
     fetchUserEnrolledCourses();
   }, []);
+
+  useEffect(() => {
+    const fetchUserToken = async () => {
+      if (user) {
+        const token = await getToken();
+        console.log(token);
+      }
+      return null;
+    };
+    fetchUserToken();
+  }, [user, getToken]);
 
   const value = {
     currency,
