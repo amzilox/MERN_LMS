@@ -103,7 +103,7 @@ export const purchaseCourse = async (req, res) => {
 
     // Create Stripe Checkout Session
     const session = await stripeInstance.checkout.sessions.create({
-      success_url: `${baseUrl}/loading?my-enrollements`,
+      success_url: `${baseUrl}/loading/my-enrollements`,
       cancel_url: `${baseUrl}/`,
       line_items,
       mode: "payment",

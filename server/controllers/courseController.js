@@ -39,7 +39,7 @@ export const getCourseId = async (req, res) => {
     });
 
     res.status(200).json({
-      status: "success",
+      success: true,
       data: {
         course,
       },
