@@ -1,6 +1,7 @@
 import { clerkClient } from "@clerk/express";
 import { v2 as cloudinary } from "cloudinary";
 import Course from "../models/Course.js";
+import User from "../models/User.js";
 import Purchase from "../models/Purchase.js";
 
 export const updateRoleToEducator = async (req, res) => {
@@ -24,7 +25,7 @@ export const updateRoleToEducator = async (req, res) => {
   }
 };
 
-// Add New Course
+// Add New Course:
 export const addCourse = async (req, res) => {
   try {
     const { courseData } = req.body;
@@ -45,22 +46,27 @@ export const addCourse = async (req, res) => {
         .status(400)
         .json({ success: false, message: "Invalid course data format" });
     }
+
     parsedCourseData.educator = userId;
+    parsedCourseData.isPublished = true;
 
     const imageUpload = await cloudinary.uploader.upload(imageFile.path);
     parsedCourseData.courseThumbnail = imageUpload.secure_url;
 
-    await Course.create(parsedCourseData);
+    const newCourse = await Course.create(parsedCourseData);
 
-    res
-      .status(201)
-      .json({ success: true, message: "Course created successfully" });
+    res.status(201).json({
+      success: true,
+      message: "Course created successfully",
+      data: newCourse,
+    });
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
+// Get Edu Courses:
 export const getEducatorCourses = async (req, res) => {
   try {
     const { userId } = await req.auth();
