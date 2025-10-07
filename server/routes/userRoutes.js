@@ -20,10 +20,10 @@ userRouter.get("/enrolled-courses", userEnrolledCourses);
 userRouter.post("/purchase", purchaseCourse);
 
 // Update Course Progress
-userRouter.post("update-course-progress", updateUserCourseProgress);
+userRouter.post("/update-course-progress", updateUserCourseProgress);
 
 // Get Course Progress
-userRouter.post("get-course-progress", getUserCourseProgress);
+userRouter.post("/get-course-progress", getUserCourseProgress);
 
 // Add Rating to Course
 userRouter.post("/add-rating", addUserRating);
