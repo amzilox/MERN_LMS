@@ -15,12 +15,17 @@ import {
 } from "../../utils/courseHelpers";
 import Footer from "../../components/students/Footer";
 import { useCourseData } from "../../hooks/useCourseData";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 function CourseDetails() {
   const { id } = useParams();
   const { courseData } = useCourseData(id);
+  const { getToken, userData, backendUrl, enrolledCourses } = useAppContext();
   const [openSections, setOpenSections] = useState(new Set());
-  const [isAlreadyEnrolled, setIsAlreadyEnrolled] = useState(false);
+  const [isAlreadyEnrolled, _] = useState(
+    enrolledCourses?.some((course) => course._id === id)
+  );
   const [playerData, setPlayerData] = useState(null);
 
   const { currency } = useAppContext();
@@ -33,10 +38,38 @@ function CourseDetails() {
     });
   };
 
+  const enrollCourse = async () => {
+    try {
+      if (!userData) {
+        return toast.warn("Login to Enroll");
+      }
+      if (isAlreadyEnrolled) {
+        return toast.warn("Already Enrolled");
+      }
+      const token = await getToken();
+
+      const { data } = await axios.post(
+        `${backendUrl}/api/user/purchase`,
+        { courseId: courseData._id },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (data.status === "success") {
+        const { session_url } = data.data;
+        window.location.replace(session_url);
+      } else {
+        toast.error(data.messsage);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  console.log(courseData, id);
+
   return courseData ? (
     <>
       <div className="flex md:flex-row flex-col-reverse gap-10 relative items-start justify-between md:px-36 md:pt-30 pt-20 text-left">
-        <div className="absolute top-0 left-0 w-full h-section-height -z-1 bg-gradient-to-b from-cyan-100/70"></div>
+        <div className="absolute top-0 left-0 w-full h-section-height -z-1 bg-gradient-to-b from-purple-100/70 via-pink-50/30 to-white"></div>
         {/* left column */}
         <div className="max-w-xl z-10 text-gray-500">
           <h1 className="md:text-course-details-heading-large text-course-details-heading-small font-semibold text-gray-800">
@@ -67,7 +100,10 @@ function CourseDetails() {
           </div>
 
           <p className="text-sm">
-            Course by <span className="text-blue-600 underline">AmzilOx</span>
+            Course by{" "}
+            <span className="text-blue-600 underline">
+              {courseData.educator.name}
+            </span>
           </p>
 
           <div className="pt-8 text-gray-800">
@@ -168,7 +204,13 @@ function CourseDetails() {
               iframeClassName="w-full aspect-video"
             />
           ) : (
-            <img src={courseData.courseThumbnail} alt="Course illustration" />
+            <div className="">
+              <img
+                className="w-full h-auto"
+                src={courseData.courseThumbnail}
+                alt="Course illustration"
+              />
+            </div>
           )}
           <div className="p-5">
             <div className="flex items-center gap-2">
@@ -222,6 +264,7 @@ function CourseDetails() {
               className={`md:mt-6 mt-4 w-full py-3 rounded  ${
                 isAlreadyEnrolled ? "bg-green-600" : "bg-blue-600"
               } text-white font-medium`}
+              onClick={enrollCourse}
             >
               {isAlreadyEnrolled ? "Already Enrolled" : "Enrolled Now"}
             </button>

@@ -5,18 +5,18 @@ import { useAppContext } from "../../context/AppContext";
 function CoursesSection() {
   const { allCourses } = useAppContext();
   return (
-    <div className="py-16 md:px-40 px-8">
+    <div className="py-16 md:px-40 px-8 w-3/4">
       <h2 className="text-3xl font-medium text-gray-800">
-        Learn from the best
+        Level Up Your Skills with the Experts
       </h2>
       <p className="text-sm md:text-base text-gray-500 mt-3">
-        Discover our top-rated courses across various categories.From coding and
-        design to <br /> business and wellness, our courses are crafted to
-        deliver results.
+        Discover hands-on courses that combine theory and real-world practice.
+        Whether you're coding, creating, <br />
+        or building your dream career — start learning smarter today.
       </p>
 
-      <div className="grid grid-cols-auto px-4 md:px-0 md:my-16 my-10 gap-4">
-        {allCourses.slice(0, 4).map((course, i) => {
+      <div className="grid grid-cols-auto px-4 md:px-0 md:my-16 my-10 gap-4 auto-rows-fr">
+        {allCourses?.slice(0, 3).map((course, i) => {
           return <CourseCard course={course} key={i} />;
         })}
       </div>

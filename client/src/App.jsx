@@ -1,6 +1,6 @@
 import { Route, Routes, useMatch } from "react-router-dom";
 import "quill/dist/quill.snow.css";
-
+import { ToastContainer } from "react-toastify";
 import Home from "./pages/student/Home";
 import CoursesList from "./pages/student/CoursesList";
 import CourseDetails from "./pages/student/CourseDetails";
@@ -17,6 +17,7 @@ function App() {
   const isEducatorRoute = useMatch("/educator/*");
   return (
     <div className="text-default min-h-screen bg-white">
+      <ToastContainer position="bottom-right" newestOnTop={true} />
       {!isEducatorRoute && <Navbar />}
       <Routes>
         <Route path="/" element={<Home />} />
@@ -27,7 +28,7 @@ function App() {
         <Route path="/player/:id" element={<Player />} />
         <Route path="/loading/:path" element={<Loading />} />
         <Route path="/educator" element={<Educator />}>
-          <Route path="/educator" element={<Dashboard />} />
+          <Route index element={<Dashboard />} />
           <Route path="add-course" element={<AddCourse />} />
           <Route path="my-courses" element={<MyCourses />} />
           <Route path="student-enrolled" element={<StudentsEnrolled />} />

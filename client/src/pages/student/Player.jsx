@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import humanizeDuration from "humanize-duration";
 import { assets } from "../../assets/assets";
@@ -8,13 +8,17 @@ import { calculateChapterTime } from "../../utils/courseHelpers";
 import Loading from "../../components/students/Loading";
 import Footer from "../../components/students/Footer";
 import Rating from "../../components/students/Rating";
+import { useAppContext } from "../../context/AppContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 function Player() {
   const { id } = useParams();
-  const { courseData } = useCourseData(id, "enrolled");
+  const { courseData, handleRate, initRating } = useCourseData(id, "enrolled");
+  const { getToken, backendUrl } = useAppContext();
   const [playerData, setPlayerData] = useState(null);
   const [openSections, setOpenSections] = useState(new Set());
-
+  const [courseProgress, SetCourseProgress] = useState(null);
   const toggleSection = (index) => {
     setOpenSections((prev) => {
       const newSet = new Set(prev);
@@ -22,6 +26,49 @@ function Player() {
       return newSet;
     });
   };
+
+  const markLectureAsCompleted = async (lectureId) => {
+    try {
+      const token = await getToken();
+      const { data } = await axios.post(
+        `${backendUrl}/api/user/update-course-progress`,
+        { courseId: id, lectureId },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (data.status === "success") {
+        toast.success(data.message);
+        getCourseProgress();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const getCourseProgress = useCallback(async () => {
+    try {
+      const token = await getToken();
+      const { data } = await axios.post(
+        `${backendUrl}/api/user/get-course-progress`,
+        { courseId: id },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (data.status === "success") {
+        SetCourseProgress(data.data.progressData);
+        toast.success(data.message);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }, [getToken, backendUrl, id]);
+
+  useEffect(() => {
+    getCourseProgress();
+  }, [getCourseProgress]);
+
   return courseData ? (
     <>
       <div className="flex flex-col-reverse p-4 sm:p-10 md:grid md:grid-cols-2 gap-10 md:px-36">
@@ -66,7 +113,12 @@ function Player() {
                         <li key={i} className="flex items-start gap-2 py-1">
                           <img
                             src={
-                              false ? assets.blue_tick_icon : assets.play_icon
+                              courseProgress &&
+                              courseProgress.lectureCompleted.includes(
+                                lecture.lectureId
+                              )
+                                ? assets.blue_tick_icon
+                                : assets.play_icon
                             }
                             alt="play it"
                             className="w-4 h-4 mt-1"
@@ -106,7 +158,7 @@ function Player() {
           </div>
           <div className="flex items-center gap-2 py-3 mt-10">
             <h1 className="text-xl font-bold">Rate this Course:</h1>
-            <Rating initialRating={0} />
+            <Rating initialRating={initRating} onRate={handleRate} />
           </div>
         </div>
 
@@ -126,9 +178,19 @@ function Player() {
                   {playerData.chapter}.{playerData.lecture}{" "}
                   {playerData.lectureTitle}
                 </p>
-                <button className="text-blue-600">
-                  {false ? "Completed" : "Mark as Complete"}
-                </button>
+                {playerData && (
+                  <button
+                    onClick={() => markLectureAsCompleted(playerData.lectureId)}
+                    className="text-blue-600"
+                  >
+                    {courseProgress &&
+                    courseProgress?.lectureCompleted?.includes(
+                      playerData.lectureId
+                    )
+                      ? "Completed"
+                      : "Mark as Complete"}
+                  </button>
+                )}
               </div>
             </div>
           ) : (

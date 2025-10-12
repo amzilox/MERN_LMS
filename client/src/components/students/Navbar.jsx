@@ -2,14 +2,39 @@ import { assets } from "../../assets/assets";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useClerk, UserButton, useUser } from "@clerk/clerk-react";
 import { useAppContext } from "../../context/AppContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 function UserLinks() {
   const navigate = useNavigate();
-  const { isEducator } = useAppContext();
+  const { isEducator, setIsEducator, getToken, backendUrl } = useAppContext();
+
+  const becomeEducator = async () => {
+    try {
+      if (isEducator) {
+        navigate("/educator");
+        return;
+      }
+      const token = await getToken();
+      const { data } = await axios.get(
+        `${backendUrl}/api/educator/update-role`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (data?.success) {
+        setIsEducator(true);
+        toast.success(data.message);
+      } else toast.error(data.message);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   return (
     <>
-      <button onClick={() => navigate("/educator")}>
+      <button onClick={becomeEducator}>
         {isEducator ? "Educator Dashboard" : "Become Educator"}
       </button>
       <span aria-hidden="true" className="mx-1">
@@ -28,15 +53,15 @@ function Navbar() {
   const { user } = useUser();
   return (
     <div
-      className={`flex items-center justify-between px-4 ms:px-10 md:px-14 lg:px-36 border-b border-gray-500 py-4 ${
-        isCourseListPage ? "bg-white" : "bg-cyan-100/70"
+      className={`flex items-center justify-between px-4 ms:px-10 md:px-14 lg:px-36 border-b border-gray-200 py-4 ${
+        isCourseListPage ? "bg-white" : "bg-purple-100/50"
       }`}
     >
       <Link to={"/"}>
         <img
           src={assets.logo}
           alt="Logo"
-          className="w-28 lg:w-32 cursor-pointer"
+          className="w-28 lg:w-36 cursor-pointer"
         />
       </Link>
 

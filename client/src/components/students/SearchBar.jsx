@@ -34,7 +34,7 @@ function SearchBar({ data }) {
   return (
     <form
       onSubmit={(e) => onSearchHandler(e)}
-      className="max-w-xl w-full md:h-14 h-12 flex items-center bg-white border border-gray-500/20 rounded"
+      className="max-w-xl w-2/4 md:h-14 h-12 flex items-center bg-white border border-gray-500/20 rounded transition-all duration-300 focus-within:w-3/4  border-gray-200 focus-within:border-pink-500 focus-within:shadow-lg focus-within:shadow-pink-500/20"
     >
       <img
         src={assets.search_icon}
@@ -50,7 +50,7 @@ function SearchBar({ data }) {
       />
       <button
         type="submit"
-        className="bg-blue-600 rounded text-white md:px-10 px-7 md:py-3 py-2 mx-1"
+        className="bg-pink-600/70 hover:bg-purple-600/70 rounded text-white md:px-10 px-7 md:py-3 py-2 mx-1"
       >
         Search
       </button>

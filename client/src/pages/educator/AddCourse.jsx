@@ -2,6 +2,9 @@ import uniqid from "uniqid";
 import Quill from "quill";
 import { useEffect, useRef, useState } from "react";
 import { assets } from "../../assets/assets";
+import { toast } from "react-toastify";
+import { useAppContext } from "../../context/AppContext";
+import axios from "axios";
 
 function AddCourse() {
   const quillRef = useRef(null);
@@ -14,13 +17,14 @@ function AddCourse() {
   const [chapters, setChapters] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [currentChapterId, setCurrentChapterId] = useState(null);
-
   const [lectureDetails, setLectureDetails] = useState({
     lectureTitle: "",
     lectureDuration: "",
     lectureUrl: "",
     isPreviewFree: false,
   });
+
+  const { getToken, backendUrl } = useAppContext();
 
   const handleChapter = (action, chapterId) => {
     if (action === "add") {
@@ -101,6 +105,44 @@ function AddCourse() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      if (!image) {
+        toast.error("Thumbnail Not Selected");
+      }
+
+      const courseData = {
+        courseTitle,
+        courseDescription: quillRef.current.root.innerHTML,
+        coursePrice: Number(coursePrice),
+        discount: Number(discount),
+        courseContent: chapters,
+      };
+
+      const formData = new FormData();
+      formData.append("courseData", JSON.stringify(courseData));
+      formData.append("image", image);
+
+      const token = await getToken();
+      const { data } = await axios.post(
+        `${backendUrl}/api/educator/add-course`,
+        formData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (data.success) {
+        toast.success(data.message);
+        setCoursePrice(0);
+        setCourseTitle("");
+        setDiscount(0);
+        setImage(null);
+        setChapters([]);
+        quillRef.current.root.innerHTML = "";
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   useEffect(() => {

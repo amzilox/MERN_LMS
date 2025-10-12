@@ -1,16 +1,29 @@
 import { useEffect, useState } from "react";
 import { useAppContext } from "../../context/AppContext";
 import Loading from "../../components/students/Loading";
+import axios from "axios";
+import { toast } from "react-toastify";
 function MyCourses() {
-  const { currency, allCourses } = useAppContext();
+  const { currency, backendUrl, isEducator, getToken } = useAppContext();
   const [courses, setCourses] = useState(null);
 
   const fetchEduCourses = async () => {
-    setCourses(allCourses);
+    try {
+      const token = await getToken();
+
+      const { data } = await axios.get(`${backendUrl}/api/educator/courses`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      data.status === "success" && setCourses(data.data.courses);
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
   useEffect(() => {
+    if (!isEducator) return;
     fetchEduCourses();
-  }, []);
+  }, [isEducator]);
 
   return courses ? (
     <div className="h-screen flex flex-col items-start justify-between md:p-8 md:pb-0 p-4 pb-0">
@@ -50,7 +63,7 @@ function MyCourses() {
                   <td className="px-4 py-3 text-center">
                     {currency}{" "}
                     {Math.floor(
-                      course.enrolledStudents.length *
+                      course.enrolledStudents?.length *
                         (course.coursePrice -
                           (course.discount * course.coursePrice) / 100)
                     )}
