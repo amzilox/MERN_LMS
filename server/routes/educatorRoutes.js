@@ -5,6 +5,7 @@ import {
   getEducatorCourses,
   getEnrolledStudentsData,
   updateRoleToEducator,
+  uploadVideo,
 } from "../controllers/educatorController.js";
 import upload from "../configs/multer.js";
 import { protectEducator } from "../middlewares/authMiddleware.js";
@@ -21,6 +22,9 @@ educatorRouter.post(
   upload.single("image"),
   addCourse
 );
+
+// Video upload
+educatorRouter.post("/upload-video", upload.single("video"), uploadVideo);
 
 // Get All Courses for Educator
 educatorRouter.get("/courses", protectEducator, getEducatorCourses);

@@ -2,7 +2,6 @@ import { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import humanizeDuration from "humanize-duration";
 import { assets } from "../../assets/assets";
-import YouTube from "react-youtube";
 import { useCourseData } from "../../hooks/useCourseData";
 import { calculateChapterTime } from "../../utils/courseHelpers";
 import Loading from "../../components/students/Loading";
@@ -11,6 +10,7 @@ import Rating from "../../components/students/Rating";
 import { useAppContext } from "../../context/AppContext";
 import axios from "axios";
 import { toast } from "react-toastify";
+import VideoPlayer from "../../components/common/VideoPlayer";
 
 function Player() {
   const { id } = useParams();
@@ -71,7 +71,7 @@ function Player() {
 
   return courseData ? (
     <>
-      <div className="flex flex-col-reverse p-4 sm:p-10 md:grid md:grid-cols-2 gap-10 md:px-36">
+      <div className="flex flex-col-reverse p-4 sm:p-10 md:grid md:grid-cols-2 gap-10 md:px-36 bg-gradient-to-b from-purple-100/70 via-pink-50/30 to-white">
         {/* left column */}
         <div className="text-gray-800">
           <h2 className="text-xl font-semibold">Course Structure</h2>
@@ -117,7 +117,7 @@ function Player() {
                               courseProgress.lectureCompleted.includes(
                                 lecture.lectureId
                               )
-                                ? assets.blue_tick_icon
+                                ? assets.green_check
                                 : assets.play_icon
                             }
                             alt="play it"
@@ -165,34 +165,16 @@ function Player() {
         {/* right column */}
         <div className="md:mt-10">
           {playerData ? (
-            <div>
-              <YouTube
-                videoId={playerData.lectureUrl.split("/").pop()}
-                opts={{
-                  playerVars: { autoplay: 1, rel: 0, modestbranding: 1 },
-                }}
-                iframeClassName="w-full aspect-video"
-              />
-              <div className="flex justify-between items-center mt-1">
-                <p>
-                  {playerData.chapter}.{playerData.lecture}{" "}
-                  {playerData.lectureTitle}
-                </p>
-                {playerData && (
-                  <button
-                    onClick={() => markLectureAsCompleted(playerData.lectureId)}
-                    className="text-blue-600"
-                  >
-                    {courseProgress &&
-                    courseProgress?.lectureCompleted?.includes(
-                      playerData.lectureId
-                    )
-                      ? "Completed"
-                      : "Mark as Complete"}
-                  </button>
-                )}
-              </div>
-            </div>
+            <VideoPlayer
+              lecture={playerData}
+              onClose={() => setPlayerData(null)}
+              showMarkComplete={true}
+              onMarkComplete={markLectureAsCompleted}
+              isCompleted={
+                courseProgress &&
+                courseProgress?.lectureCompleted?.includes(playerData.lectureId)
+              }
+            />
           ) : (
             <img
               src={courseData ? courseData.courseThumbnail : ""}

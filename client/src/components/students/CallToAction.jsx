@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { assets } from "../../assets/assets";
 
 function CallToAction() {
@@ -12,9 +13,12 @@ function CallToAction() {
         today and unlock your full potential!
       </p>
       <div className="flex items-center font-medium gap-6 mt-4">
-        <button className="px-10 py-3 rounded-md text-white bg-blue-600">
+        <Link
+          to="/course-list"
+          className="px-10 py-3 rounded-md text-white bg-pink-600/70 hover:bg-pink-800/70"
+        >
           Get started
-        </button>
+        </Link>
         <button className="flex items-center gap-2">
           Learn more <img src={assets.arrow_icon} alt="arrow_icon" />
         </button>

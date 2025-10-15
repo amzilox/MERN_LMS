@@ -72,7 +72,7 @@ function Navbar() {
           <UserButton />
         ) : (
           <button
-            className="bg-blue-600 text-white px-5 py-2 rounded-full"
+            className="bg-pink-600/70 hover:bg-pink-800/70 text-white px-5 py-2 rounded-full"
             onClick={() => openSignIn()}
           >
             Create Account

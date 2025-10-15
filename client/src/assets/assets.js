@@ -15,9 +15,9 @@ import course_3_thumbnail from "./course_3.png";
 import course_4_thumbnail from "./course_4.png";
 import star from "./rating_star.svg";
 import star_blank from "./star_dull_icon.svg";
-import profile_img_1 from "./profile_img_1.png";
-import profile_img_2 from "./profile_img_2.png";
-import profile_img_3 from "./profile_img_3.png";
+import profile_img_1 from "./profile_img_1.jpg";
+import profile_img_2 from "./profile_img_2.jpg";
+import profile_img_3 from "./profile_img_3.jpg";
 import arrow_icon from "./arrow_icon.svg";
 import down_arrow_icon from "./down_arrow_icon.svg";
 import time_left_clock_icon from "./time_left_clock_icon.svg";
@@ -36,7 +36,7 @@ import earning_icon from "./earning_icon.svg";
 import dropdown_icon from "./dropdown_icon.svg";
 import patients_icon from "./patients_icon.svg";
 import play_icon from "./play_icon.svg";
-import blue_tick_icon from "./blue_tick_icon.svg";
+import green_check from "./green_check.svg";
 import course_4 from "./course_4.png";
 import profile_img from "./profile_img.png";
 import profile_img2 from "./profile_img2.png";
@@ -45,6 +45,7 @@ import lesson_icon from "./lesson_icon.svg";
 
 export const assets = {
   logo,
+  green_check,
   search_icon,
   sketch,
   vercel_logo,
@@ -86,7 +87,6 @@ export const assets = {
   profile_img2,
   profile_img3,
   play_icon,
-  blue_tick_icon,
   lesson_icon,
 };
 
@@ -103,28 +103,28 @@ export const dummyEducatorData = {
 
 export const dummyTestimonial = [
   {
-    name: "Donald Jackman",
-    role: "SWE 1 @ Amazon",
+    name: "Sarah Thompson",
+    role: "Frontend Developer @ Spotify",
     image: assets.profile_img_1,
     rating: 5,
     feedback:
-      "I've been using Imagify for nearly two years, primarily for Instagram, and it has been incredibly user-friendly, making my work much easier.",
+      "As a web developer, I appreciate how easy it is to build and publish courses here. The platform’s support and community make teaching feel rewarding and professional.",
   },
   {
-    name: "Richard Nelson",
-    role: "SWE 2 @ Samsung",
+    name: "Daniel Reyes",
+    role: "Data Analyst @ IBM",
     image: assets.profile_img_2,
     rating: 4,
     feedback:
-      "I've been using Imagify for nearly two years, primarily for Instagram, and it has been incredibly user-friendly, making my work much easier.",
+      "I loved how practical the courses are! The data science modules gave me the confidence to handle real projects at work. I recommend Mindure to anyone looking to upskill fast.",
   },
   {
-    name: "James Washington",
-    role: "SWE 2 @ Google",
+    name: "Amina El Fassi",
+    role: "Educator & Course Creator",
     image: assets.profile_img_3,
-    rating: 4.5,
+    rating: 5,
     feedback:
-      "I've been using Imagify for nearly two years, primarily for Instagram, and it has been incredibly user-friendly, making my work much easier.",
+      "As an instructor, I appreciate how easy it is to build and publish courses here. The platform’s support and community make teaching feel rewarding and professional.",
   },
 ];
 

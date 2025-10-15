@@ -66,6 +66,57 @@ export const addCourse = async (req, res) => {
   }
 };
 
+// Upload Video to Cloudinary
+export const uploadVideo = async (req, res) => {
+  try {
+    const videoFile = req.file;
+    const { userId } = await req.auth();
+
+    if (!videoFile) {
+      return res.status(400).json({
+        success: false,
+        message: "No video file provided",
+      });
+    }
+
+    // (max 500MB)
+    if (videoFile.size > +process.env.MAX_SIZE_MB * 1024 * 1024) {
+      return res.status(400).json({
+        success: false,
+        message: `Video file too large. Maximum size is ${process.env.MAX_MB}MB`,
+      });
+    }
+
+    // Upload to Cloudinary with video-specific settings
+    const videoUpload = await cloudinary.uploader.upload(videoFile.path, {
+      resource_type: "video",
+      folder: "course-videos",
+      format: "mp4", // Convert to MP4 for compatibility
+      transformation: [
+        { quality: "auto", fetch_format: "auto" }, // Optimize quality
+      ],
+    });
+
+    // Delete temp file
+    await fs.unlink(videoFile.path);
+
+    res.status(200).json({
+      success: true,
+      message: "Video uploaded successfully",
+      videoUrl: videoUpload.secure_url,
+      duration: videoUpload.duration, // Video duration in seconds
+      publicId: videoUpload.public_id,
+      uploadedBy: userId,
+    });
+  } catch (error) {
+    console.error("Video upload error:", error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 // Get Edu Courses:
 export const getEducatorCourses = async (req, res) => {
   try {

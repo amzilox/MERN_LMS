@@ -29,12 +29,16 @@ function Sidebar() {
               className={({ isActive }) =>
                 `flex items-center md:flex-row flex-col md:justify-start justify-center py-3.5 md:px-10 gap-3 ${
                   isActive
-                    ? "bg-blue-50 border-r-[6px] border-blue-500/90"
+                    ? "bg-pink-50 border-r-[6px] border-purple-500/90"
                     : "hover:bg-gray-100/90 border-r-[6px] border-white hover:border-gray-100/90"
                 }`
               }
             >
-              <img src={item.icon} alt="" className="w-6 h-6" />
+              <img
+                src={item.icon}
+                alt={item.name}
+                className="w-6 h-6 p-1 md:p-0"
+              />
               <p className="md:block hidden text-center">{item.name}</p>
             </NavLink>
           );

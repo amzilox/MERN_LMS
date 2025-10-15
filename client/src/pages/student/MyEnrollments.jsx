@@ -57,7 +57,7 @@ function MyEnrollments() {
 
   return (
     <>
-      <div className="px-8 md:px-36 pt-10">
+      <div className="px-8 md:px-36 pt-10 bg-gradient-to-b from-purple-100/70 via-pink-50/30 to-white">
         <h1 className="text-2xl font-semibold">My Enrollments</h1>
         <table className="md:table-auto table-fixed w-full overflow-hidden border mt-10">
           <thead className="text-gray-900 border-b border-gray-500/20 text-sm text-left max-sm:hidden">
@@ -112,7 +112,7 @@ function MyEnrollments() {
                       className={`px-3 sm:px-5 py-1.5 sm:py-2 max-sm:text-xs text-white rounded-md ${
                         isCompleted
                           ? "bg-green-600 hover:bg-green-700"
-                          : "bg-blue-600 hover:bg-blue-700"
+                          : "bg-pink-600 hover:bg-pink-700"
                       }`}
                       onClick={() => navigate("/player/" + course._id)}
                     >

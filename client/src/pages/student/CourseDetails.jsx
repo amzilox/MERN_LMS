@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import humanizeDuration from "humanize-duration";
-import YouTube from "react-youtube";
 import { useAppContext } from "../../context/AppContext";
 
 import { assets } from "../../assets/assets";
@@ -17,6 +16,7 @@ import Footer from "../../components/students/Footer";
 import { useCourseData } from "../../hooks/useCourseData";
 import { toast } from "react-toastify";
 import axios from "axios";
+import VideoPlayer from "../../components/common/VideoPlayer";
 
 function CourseDetails() {
   const { id } = useParams();
@@ -198,13 +198,13 @@ function CourseDetails() {
         {/* right column */}
         <div className="max-w-course-card z-10 shadow-custom-card rounded-t md:rounded-none overflow-hidden bg-white min-w-[300px] sm:min-w-[420px]">
           {playerData ? (
-            <YouTube
-              videoId={playerData.videoId}
-              opts={{ playerVars: { autoplay: 1, rel: 0, modestbranding: 1 } }}
-              iframeClassName="w-full aspect-video"
+            <VideoPlayer
+              lecture={playerData}
+              onClose={() => setPlayerData(null)}
+              showMarkComplete={false} // For free-preview ? no need!
             />
           ) : (
-            <div className="">
+            <div>
               <img
                 className="w-full h-auto"
                 src={courseData.courseThumbnail}
@@ -262,7 +262,7 @@ function CourseDetails() {
             </div>
             <button
               className={`md:mt-6 mt-4 w-full py-3 rounded  ${
-                isAlreadyEnrolled ? "bg-green-600" : "bg-blue-600"
+                isAlreadyEnrolled ? "bg-green-600" : "bg-pink-600"
               } text-white font-medium`}
               onClick={enrollCourse}
             >

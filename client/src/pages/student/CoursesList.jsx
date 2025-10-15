@@ -33,11 +33,11 @@ function CoursesList() {
         <div className="flex md:flex-row flex-col gap-6 items-start justify-between w-full">
           <div className="">
             <h1 className="text-4xl font-semibold text-gray-800">
-              Course List
+              Explore Our Courses
             </h1>
             <p className="text-gray-500">
               <span
-                className="text-blue-600 cursor-pointer"
+                className="text-pink-600 cursor-pointer"
                 onClick={() => navigate("/")}
               >
                 Home
