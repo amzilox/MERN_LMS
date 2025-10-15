@@ -1,16 +1,18 @@
 import mongoose from "mongoose";
 
-const lectureSchema = new mongoose.Schema(
-  {
-    lectureId: { type: String, required: true },
-    lectureTitle: { type: String, required: true },
-    lectureDuration: { type: Number, required: true },
-    lectureUrl: { type: String, required: true },
-    isPreviewFree: { type: Boolean, default: false },
-    lectureOrder: { type: Number, required: true },
+const lectureSchema = new mongoose.Schema({
+  lectureId: { type: String, required: true },
+  lectureTitle: { type: String, required: true },
+  lectureDuration: { type: Number, required: true },
+  lectureUrl: { type: String, required: true },
+  videoSource: {
+    type: String,
+    enum: ["youtube", "cloudinary"],
+    default: "youtube", // Default to youtube for backward compatibility
   },
-  { _id: false }
-);
+  isPreviewFree: { type: Boolean, default: false },
+  lectureOrder: { type: Number, required: true },
+});
 
 const chapterSchema = new mongoose.Schema(
   {

@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import humanizeDuration from "humanize-duration";
 import { assets } from "../../assets/assets";
+import YouTube from "react-youtube";
 import { useCourseData } from "../../hooks/useCourseData";
 import { calculateChapterTime } from "../../utils/courseHelpers";
 import Loading from "../../components/students/Loading";
@@ -165,16 +166,20 @@ function Player() {
         {/* right column */}
         <div className="md:mt-10">
           {playerData ? (
-            <VideoPlayer
-              lecture={playerData}
-              onClose={() => setPlayerData(null)}
-              showMarkComplete={true}
-              onMarkComplete={markLectureAsCompleted}
-              isCompleted={
-                courseProgress &&
-                courseProgress?.lectureCompleted?.includes(playerData.lectureId)
-              }
-            />
+            <div>
+              <VideoPlayer
+                lecture={playerData}
+                onClose={() => setPlayerData(null)}
+                showMarkComplete={true}
+                onMarkComplete={markLectureAsCompleted}
+                isCompleted={
+                  courseProgress &&
+                  courseProgress?.lectureCompleted?.includes(
+                    playerData.lectureId
+                  )
+                }
+              />
+            </div>
           ) : (
             <img
               src={courseData ? courseData.courseThumbnail : ""}

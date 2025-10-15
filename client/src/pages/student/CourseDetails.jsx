@@ -64,8 +64,6 @@ function CourseDetails() {
     }
   };
 
-  console.log(courseData, id);
-
   return courseData ? (
     <>
       <div className="flex md:flex-row flex-col-reverse gap-10 relative items-start justify-between md:px-36 md:pt-30 pt-20 text-left">
@@ -156,9 +154,8 @@ function CourseDetails() {
                                   <p
                                     onClick={() =>
                                       setPlayerData({
-                                        videoId: lecture.lectureUrl
-                                          .split("/")
-                                          .pop(),
+                                        lectureUrl: lecture.lectureUrl,
+                                        videoSource: lecture.videoSource,
                                       })
                                     }
                                     className="text-blue-500 cursor-pointer"

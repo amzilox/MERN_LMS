@@ -8,6 +8,7 @@ const VideoPlayer = ({
   isCompleted,
 }) => {
   const renderPlayer = () => {
+    console.log(lecture);
     if (!lecture || !lecture.lectureUrl) {
       return (
         <div className="w-full aspect-video bg-gray-100 flex items-center justify-center">
@@ -16,9 +17,13 @@ const VideoPlayer = ({
       );
     }
 
+    // Default to youtube if videoSource is missing (backward compatibility)
+    const videoSource = lecture.videoSource || "youtube";
+
     // YouTube video
-    if (lecture.videoSource === "youtube") {
+    if (videoSource === "youtube") {
       const videoId = lecture.lectureUrl.split("/").pop();
+      console.log(videoId);
       return (
         <YouTube
           videoId={videoId}
@@ -35,10 +40,7 @@ const VideoPlayer = ({
     }
 
     // Cloudinary or direct video URL
-    if (
-      lecture.videoSource === "cloudinary" ||
-      lecture.videoSource === "direct"
-    ) {
+    if (videoSource === "cloudinary" || videoSource === "direct") {
       return (
         <video
           className="w-full aspect-video rounded-lg bg-black"
