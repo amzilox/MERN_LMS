@@ -154,8 +154,9 @@ function CourseDetails() {
                                   <p
                                     onClick={() =>
                                       setPlayerData({
-                                        lectureUrl: lecture.lectureUrl,
-                                        videoSource: lecture.videoSource,
+                                        ...lecture,
+                                        chapter: index + 1,
+                                        lecture: i + 1,
                                       })
                                     }
                                     className="text-blue-500 cursor-pointer"
@@ -199,6 +200,7 @@ function CourseDetails() {
               lecture={playerData}
               onClose={() => setPlayerData(null)}
               showMarkComplete={false} // For free-preview ? no need!
+              isCompleted={false}
             />
           ) : (
             <div>

@@ -1,3 +1,4 @@
+import fs from "fs";
 import { clerkClient } from "@clerk/express";
 import { v2 as cloudinary } from "cloudinary";
 import Course from "../models/Course.js";
@@ -32,6 +33,12 @@ export const addCourse = async (req, res) => {
     const imageFile = req.file;
     const { userId } = await req.auth();
 
+    if (!userId) {
+      return res
+        .status(401)
+        .json({ success: false, message: "User not authenticated" });
+    }
+
     if (!imageFile) {
       return res
         .status(400)
@@ -55,6 +62,9 @@ export const addCourse = async (req, res) => {
 
     const newCourse = await Course.create(parsedCourseData);
 
+    // remove temp file after successful upload/create
+    if (imageFile.path) await fs.promises.unlink(imageFile.path);
+
     res.status(201).json({
       success: true,
       message: "Course created successfully",
@@ -72,6 +82,12 @@ export const uploadVideo = async (req, res) => {
     const videoFile = req.file;
     const { userId } = await req.auth();
 
+    if (!userId) {
+      return res
+        .status(401)
+        .json({ success: false, message: "User not authenticated" });
+    }
+
     if (!videoFile) {
       return res.status(400).json({
         success: false,
@@ -80,10 +96,11 @@ export const uploadVideo = async (req, res) => {
     }
 
     // (max 500MB)
-    if (videoFile.size > +process.env.MAX_SIZE_MB * 1024 * 1024) {
+    const maxMb = +process.env.MAX_SIZE_MB;
+    if (videoFile.size > maxMb * 1024 * 1024) {
       return res.status(400).json({
         success: false,
-        message: `Video file too large. Maximum size is ${process.env.MAX_MB}MB`,
+        message: `Video file too large. Maximum size is ${maxMb}MB`,
       });
     }
 
@@ -98,13 +115,13 @@ export const uploadVideo = async (req, res) => {
     });
 
     // Delete temp file
-    await fs.unlink(videoFile.path);
+    await fs.promises.unlink(videoFile.path);
 
     res.status(200).json({
       success: true,
       message: "Video uploaded successfully",
       videoUrl: videoUpload.secure_url,
-      duration: videoUpload.duration, // Video duration in seconds
+      duration: videoUpload.duration,
       publicId: videoUpload.public_id,
       uploadedBy: userId,
     });

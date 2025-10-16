@@ -6,6 +6,7 @@ import axios from "axios";
 import { assets } from "../../assets/assets";
 import { useAppContext } from "../../context/AppContext";
 import EduPopup from "../../components/educator/EduPopup";
+import { extractYouTubeId, isValidYouTubeUrl } from "../../utils/VideoHelpers";
 
 function AddCourse() {
   const quillRef = useRef(null);
@@ -95,12 +96,22 @@ function AddCourse() {
         return;
       }
 
-      if (
-        lectureDetails.videoSource === "youtube" &&
-        !lectureDetails.lectureUrl
-      ) {
-        toast.error("Please provide a YouTube URL");
-        return;
+      if (lectureDetails.videoSource === "youtube") {
+        if (!lectureDetails.lectureUrl) {
+          toast.error("Please provide a YouTube URL");
+          return;
+        }
+
+        if (!isValidYouTubeUrl(lectureDetails.lectureUrl)) {
+          toast.error(
+            "Invalid YouTube URL. Please check the link and try again."
+          );
+          return;
+        }
+
+        // (Debugging...)
+        const videoId = extractYouTubeId(lectureDetails.lectureUrl);
+        console.log("✅ Valid YouTube ID extracted:", videoId);
       }
 
       if (lectureDetails.videoSource === "cloudinary" && !videoFile) {

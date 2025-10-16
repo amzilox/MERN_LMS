@@ -1,4 +1,5 @@
 import YouTube from "react-youtube";
+import { extractYouTubeId } from "../../utils/VideoHelpers";
 
 const VideoPlayer = ({
   lecture,
@@ -22,7 +23,7 @@ const VideoPlayer = ({
 
     // YouTube video
     if (videoSource === "youtube") {
-      const videoId = lecture.lectureUrl.split("/").pop();
+      const videoId = extractYouTubeId(lecture.lectureUrl);
       console.log(videoId);
       return (
         <YouTube
