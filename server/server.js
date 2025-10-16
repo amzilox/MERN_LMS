@@ -17,7 +17,18 @@ await connectDB();
 await connectCloudinary();
 
 // Middlewares
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173", // Your local dev
+      "http://localhost:5174", // Backup port
+      "https://lmsbackend-alpha.vercel.app", // My production domain ( deployed)
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 // CRITICAL: Stripe webhook MUST come BEFORE express.json()!!
 app.post(

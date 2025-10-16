@@ -9,7 +9,6 @@ const VideoPlayer = ({
   isCompleted,
 }) => {
   const renderPlayer = () => {
-    console.log(lecture);
     if (!lecture || !lecture.lectureUrl) {
       return (
         <div className="w-full aspect-video bg-gray-100 flex items-center justify-center">
@@ -24,7 +23,6 @@ const VideoPlayer = ({
     // YouTube video
     if (videoSource === "youtube") {
       const videoId = extractYouTubeId(lecture.lectureUrl);
-      console.log(videoId);
       return (
         <YouTube
           videoId={videoId}
