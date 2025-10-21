@@ -1,98 +1,92 @@
-import { assets } from "../../assets/assets";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useClerk, UserButton, useUser } from "@clerk/clerk-react";
-import { useAppContext } from "../../context/AppContext";
-import axios from "axios";
-import { toast } from "react-toastify";
-
-function UserLinks() {
-  const navigate = useNavigate();
-  const { isEducator, setIsEducator, getToken, backendUrl } = useAppContext();
-
-  const becomeEducator = async () => {
-    try {
-      if (isEducator) {
-        navigate("/educator");
-        return;
-      }
-      const token = await getToken();
-      const { data } = await axios.get(
-        `${backendUrl}/api/educator/update-role`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      if (data?.success) {
-        setIsEducator(true);
-        toast.success(data.message);
-      } else toast.error(data.message);
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
-
-  return (
-    <>
-      <button onClick={becomeEducator}>
-        {isEducator ? "Educator Dashboard" : "Become Educator"}
-      </button>
-      <span aria-hidden="true" className="mx-1">
-        |
-      </span>
-      <Link to="/my-enrollments">My Enrollments</Link>
-    </>
-  );
-}
+import { assets } from "../../assets/assets";
+import UserLinks from "./UserLinks";
 
 function Navbar() {
   const location = useLocation();
   const isCourseListPage = location.pathname.includes("/course-list");
-
   const { openSignIn } = useClerk();
   const { user } = useUser();
+
   return (
-    <div
-      className={`flex items-center justify-between px-4 ms:px-10 md:px-14 lg:px-36 border-b border-gray-200 py-4 ${
-        isCourseListPage ? "bg-white" : "bg-purple-100/50"
+    <nav
+      className={`sticky top-0 z-50 flex items-center justify-between px-4 sm:px-10 md:px-14 lg:px-36 border-b border-gray-200 py-4 backdrop-blur-sm transition-colors duration-300 ${
+        isCourseListPage ? "bg-white/95" : "bg-purple-50/95"
       }`}
     >
-      <Link to={"/"}>
-        <img
-          src={assets.logo}
-          alt="Logo"
-          className="w-28 lg:w-36 cursor-pointer"
-        />
+      {/* Logo */}
+      <Link to="/" className="transition-opacity hover:opacity-80">
+        <img src={assets.logo} alt="Mindure Logo" className="w-28 lg:w-36" />
       </Link>
 
-      {/* Desktop */}
-      <div className="hidden md:flex items-center gap-5 text-gray-500">
-        <div className="flex items-center gap-5">{user && <UserLinks />}</div>
+      {/* Desktop Navigation */}
+      <div className="hidden md:flex items-center gap-6">
+        {user && <UserLinks />}
+
         {user ? (
-          <UserButton />
+          <UserButton
+            appearance={{
+              elements: {
+                avatarBox:
+                  "w-10 h-10 ring-2 ring-purple-200 hover:ring-purple-400 transition-all",
+              },
+            }}
+          />
         ) : (
           <button
-            className="bg-pink-600/70 hover:bg-pink-800/70 text-white px-5 py-2 rounded-full"
+            className="group relative bg-gradient-to-l from-pink-400 to-purple-400 
+hover:from-pink-500 hover:to-purple-500 
+text-white px-6 py-2.5 rounded-full font-medium transition-all duration-300 
+shadow-md hover:shadow-lg hover:shadow-pink-400/40 hover:-translate-y-0.5"
             onClick={() => openSignIn()}
           >
-            Create Account
+            <span className="flex items-center gap-2">
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+                />
+              </svg>
+              Get Started
+            </span>
           </button>
         )}
       </div>
-      {/* For Phone Screens */}
-      <div className="md:hidden flex items-center gap-2 sm:gap-5 text-gray-500">
-        <div className="flex items-center gap-1 sm:gap-2 max-sm:text-xs ">
-          {user && <UserLinks />}
-        </div>
+
+      {/* Mobile Navigation */}
+      <div className="md:hidden flex items-center gap-3 text-gray-700">
+        {user && <UserLinks />}
+
         {user ? (
-          <UserButton />
+          <UserButton
+            appearance={{
+              elements: {
+                avatarBox: "w-9 h-9 ring-2 ring-purple-200",
+              },
+            }}
+          />
         ) : (
-          <button onClick={() => openSignIn()}>
-            <img src={assets.user_icon} alt="Sign in / Create account" />
+          <button
+            onClick={() => openSignIn()}
+            className="p-2 rounded-full bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 transition-all duration-300 shadow-md"
+          >
+            <img
+              src={assets.user_icon}
+              alt="Sign in"
+              className="w-5 h-5 brightness-0 invert"
+            />
           </button>
         )}
       </div>
-    </div>
+    </nav>
   );
 }
 

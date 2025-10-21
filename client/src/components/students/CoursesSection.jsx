@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import CourseCard from "./CourseCard";
-import { useAppContext } from "../../context/AppContext";
+import { useCourses } from "../../context/CourseContext";
 
 function CoursesSection() {
-  const { allCourses } = useAppContext();
+  const { allCourses } = useCourses();
   return (
     <div className="py-16 md:px-40 px-8 w-3/4">
       <h2 className="text-3xl font-medium text-gray-800">
@@ -23,7 +23,7 @@ function CoursesSection() {
 
       <Link
         to={"/course-list"}
-        className="text-gray-500 border border-gray-500/30 px-10 py-3 rounded"
+        className="px-10 py-3 rounded-md text-white bg-pink-600/70 hover:bg-pink-600/90"
       >
         Show all courses
       </Link>

@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
-import { dummyStudentEnrolled } from "../../assets/assets";
 import Loading from "../../components/students/Loading";
-import { useAppContext } from "../../context/AppContext";
+import { useAppConfig } from "../../context/AppContext";
+import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
 import { toast } from "react-toastify";
+import EmptySection from "../../components/common/EmptySection";
+import { assets } from "../../assets/assets";
 
 function StudentsEnrolled() {
   const [enrolledStudents, setEnrolledStudents] = useState(null);
-  const { backendUrl, getToken, isEducator } = useAppContext();
+  const { backendUrl } = useAppConfig();
+  const { getToken, isEducator } = useAuth();
 
   const fetchEnrolledStudents = async () => {
     try {
@@ -47,25 +50,38 @@ function StudentsEnrolled() {
             </tr>
           </thead>
           <tbody className="text-sm text-gray-500">
-            {enrolledStudents.map((item, index) => (
-              <tr key={index} className="border-b border-gray-500/20">
-                <td className="px-4 py-3 text-center hidden sm:table-cell">
-                  {index + 1}
-                </td>
-                <td className="md:px-4 px-2 py-3 flex items-center space-x-3">
-                  <img
-                    src={item.student.imageUrl}
-                    alt="Student image"
-                    className="w-8 h-9 rounded-full"
+            {enrolledStudents.length === 0 ? (
+              <tr>
+                <td colSpan="4" className="p-0">
+                  <EmptySection
+                    imageSrc={assets.student}
+                    title="No Students Enrolled Yet"
+                    description="No students have enrolled in your courses yet. Keep creating quality content and they will come!"
+                    size="md"
                   />
-                  <span className="truncate">{item.student.name}</span>
-                </td>
-                <td className="px-4 py-3 truncate">{item.courseTitle}</td>
-                <td className="px-4 py-3 hidden sm:table-cell">
-                  {new Date(item.purchaseDate).toLocaleDateString()}
                 </td>
               </tr>
-            ))}
+            ) : (
+              enrolledStudents.map((item, index) => (
+                <tr key={index} className="border-b border-gray-500/20">
+                  <td className="px-4 py-3 text-center hidden sm:table-cell">
+                    {index + 1}
+                  </td>
+                  <td className="md:px-4 px-2 py-3 flex items-center space-x-3">
+                    <img
+                      src={item.student.imageUrl}
+                      alt="Student image"
+                      className="w-8 h-9 rounded-full"
+                    />
+                    <span className="truncate">{item.student.name}</span>
+                  </td>
+                  <td className="px-4 py-3 truncate">{item.courseTitle}</td>
+                  <td className="px-4 py-3 hidden sm:table-cell">
+                    {new Date(item.purchaseDate).toLocaleDateString()}
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

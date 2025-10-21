@@ -24,7 +24,7 @@ educatorRouter.post(
 );
 
 // Video upload
-educatorRouter.post("/upload-video", upload.single("video"), uploadVideo);
+// educatorRouter.post("/upload-video", upload.single("video"), uploadVideo);
 
 // Get All Courses for Educator
 educatorRouter.get("/courses", protectEducator, getEducatorCourses);

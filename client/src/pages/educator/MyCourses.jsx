@@ -1,10 +1,17 @@
 import { useEffect, useState } from "react";
-import { useAppContext } from "../../context/AppContext";
-import Loading from "../../components/students/Loading";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import axios from "axios";
+import { useAppConfig } from "../../context/AppContext";
+import { useAuth } from "../../context/AuthContext";
+import Loading from "../../components/students/Loading";
+import EmptySection from "../../components/common/EmptySection";
+import { assets } from "../../assets/assets";
+
 function MyCourses() {
-  const { currency, backendUrl, isEducator, getToken } = useAppContext();
+  const { currency, backendUrl } = useAppConfig();
+  const navigate = useNavigate();
+  const { isEducator, getToken } = useAuth();
   const [courses, setCourses] = useState(null);
 
   const fetchEduCourses = async () => {
@@ -48,34 +55,49 @@ function MyCourses() {
               </tr>
             </thead>
             <tbody className="text-sm text-gray-500">
-              {courses.map((course) => (
-                <tr key={course._id} className="border-b border-gray-500/20">
-                  <td className="md:px-4 pl-2 md:pl-4 py-3 flex items-center space-x-3 truncate">
-                    <img
-                      src={course.courseThumbnail}
-                      alt="Course illustration"
-                      className="w-16"
+              {courses.length === 0 ? (
+                <tr>
+                  <td colSpan="4" className="p-0">
+                    <EmptySection
+                      imageSrc={assets.cat_vase}
+                      title="No Courses Created"
+                      description="You haven't created any courses yet. Start building your first course and share your knowledge!"
+                      actionLabel="Create Your First Course"
+                      onAction={() => navigate("/educator/add-course")}
+                      size="md"
                     />
-                    <span className="truncate hideen md:block">
-                      {course.courseTitle}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-center">
-                    {currency}{" "}
-                    {Math.floor(
-                      course.enrolledStudents?.length *
-                        (course.coursePrice -
-                          (course.discount * course.coursePrice) / 100)
-                    )}
-                  </td>
-                  <td className="px-4 py-3 text-center">
-                    {course.enrolledStudents.length}
-                  </td>
-                  <td className="px-4 py-3 text-center">
-                    {new Date(course.createdAt).toLocaleDateString()}
                   </td>
                 </tr>
-              ))}
+              ) : (
+                courses.map((course) => (
+                  <tr key={course._id} className="border-b border-gray-500/20">
+                    <td className="md:px-4 pl-2 md:pl-4 py-3 flex items-center space-x-3 truncate">
+                      <img
+                        src={course.courseThumbnail}
+                        alt="Course illustration"
+                        className="w-16"
+                      />
+                      <span className="truncate hideen md:block">
+                        {course.courseTitle}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      {currency}{" "}
+                      {Math.floor(
+                        course.enrolledStudents?.length *
+                          (course.coursePrice -
+                            (course.discount * course.coursePrice) / 100)
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      {course.enrolledStudents.length}
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      {new Date(course.createdAt).toLocaleDateString()}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

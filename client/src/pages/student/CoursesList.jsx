@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import SearchBar from "../../components/students/SearchBar";
-import { useAppContext } from "../../context/AppContext";
 import CourseCard from "../../components/students/CourseCard";
+import { useCourses } from "../../context/CourseContext";
 import { useEffect, useState } from "react";
 import { assets } from "../../assets/assets";
 import Footer from "../../components/students/Footer";
@@ -9,7 +9,7 @@ import Footer from "../../components/students/Footer";
 function CoursesList() {
   const navigate = useNavigate();
   const { query } = useParams();
-  const { allCourses } = useAppContext();
+  const { allCourses } = useCourses();
   const [filteredCourses, setFilteredCourses] = useState(allCourses || []);
 
   useEffect(() => {

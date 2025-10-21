@@ -42,9 +42,17 @@ import profile_img from "./profile_img.png";
 import profile_img2 from "./profile_img2.png";
 import profile_img3 from "./profile_img3.png";
 import lesson_icon from "./lesson_icon.svg";
+import cat from "./cat.svg";
+import cat_pana from "./cat_pana.svg";
+import cat_vase from "./cat_vase.svg";
+import student from "./student.svg";
 
 export const assets = {
   logo,
+  cat,
+  student,
+  cat_pana,
+  cat_vase,
   green_check,
   search_icon,
   sketch,

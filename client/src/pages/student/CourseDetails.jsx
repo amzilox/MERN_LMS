@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import humanizeDuration from "humanize-duration";
-import { useAppContext } from "../../context/AppContext";
+import { useAppConfig } from "../../context/AppContext";
+import { useCourses } from "../../context/CourseContext";
 
 import { assets } from "../../assets/assets";
 import Loading from "../../components/students/Loading";
@@ -17,18 +18,34 @@ import { useCourseData } from "../../hooks/useCourseData";
 import { toast } from "react-toastify";
 import axios from "axios";
 import VideoPlayer from "../../components/common/VideoPlayer";
+import { useAuth } from "../../context/AuthContext";
 
 function CourseDetails() {
   const { id } = useParams();
   const { courseData } = useCourseData(id);
-  const { getToken, userData, backendUrl, enrolledCourses } = useAppContext();
+
+  const { backendUrl, currency } = useAppConfig();
+  const { enrolledCourses } = useCourses();
+  const { getToken, userData } = useAuth();
+
   const [openSections, setOpenSections] = useState(new Set());
   const [isAlreadyEnrolled, _] = useState(
     enrolledCourses?.some((course) => course._id === id)
   );
   const [playerData, setPlayerData] = useState(null);
+  const [showFullDesc, setShowFullDesc] = useState(false);
 
-  const { currency } = useAppContext();
+  // helper to strip HTML for safe excerpting
+  const stripHtml = (html) => {
+    if (!html) return "";
+    try {
+      const doc = new DOMParser().parseFromString(html, "text/html");
+      return doc.body.textContent || "";
+    } catch {
+      // fallback server-side or parsing failure
+      return html.replace(/<[^>]+>/g, "");
+    }
+  };
 
   const toggleSection = (index) => {
     setOpenSections((prev) => {
@@ -66,19 +83,40 @@ function CourseDetails() {
 
   return courseData ? (
     <>
-      <div className="flex md:flex-row flex-col-reverse gap-10 relative items-start justify-between md:px-36 md:pt-30 pt-20 text-left">
+      <div
+        className="flex md:flex-row flex-col-reverse gap-10 relative 
+    items-center md:items-start 
+    justify-center md:justify-between 
+    md:px-36 md:pt-30 pt-20 
+     md:text-left px-4"
+      >
         <div className="absolute top-0 left-0 w-full h-section-height -z-1 bg-gradient-to-b from-purple-100/70 via-pink-50/30 to-white"></div>
         {/* left column */}
         <div className="max-w-xl z-10 text-gray-500">
-          <h1 className="md:text-course-details-heading-large text-course-details-heading-small font-semibold text-gray-800">
+          <h1 className="md:text-course-details-heading-large text-course-details-heading-small mb-6 font-semibold text-gray-800">
             {courseData.courseTitle}
           </h1>
-          <p
-            className="pt-4 md:text-base text-small"
-            dangerouslySetInnerHTML={{
-              __html: courseData.courseDescription.slice(0, 200),
-            }}
-          ></p>
+
+          {showFullDesc ? (
+            <p
+              className="pt-4 md:text-base text-small"
+              dangerouslySetInnerHTML={{ __html: courseData.courseDescription }}
+            />
+          ) : (
+            <p className="pt-4 inline md:text-base text-small">
+              {(() => {
+                const txt = stripHtml(courseData.courseDescription);
+                return txt.length > 200 ? txt.slice(0, 200) + "..." : txt;
+              })()}
+            </p>
+          )}
+          <button
+            type="button"
+            onClick={() => setShowFullDesc((s) => !s)}
+            className="text-yellow-500 font-medium hover:text-yellow-600 transition-colors"
+          >
+            {showFullDesc ? "Show less" : "Show more"}
+          </button>
           {/* review and ratings */}
           <div className="flex items-center space-x-2 pt-3 pb-1 text-sm">
             <p>{calculateRatings(courseData)}</p>
@@ -195,22 +233,14 @@ function CourseDetails() {
         </div>
         {/* right column */}
         <div className="max-w-course-card z-10 shadow-custom-card rounded-t md:rounded-none overflow-hidden bg-white min-w-[300px] sm:min-w-[420px]">
-          {playerData ? (
-            <VideoPlayer
-              lecture={playerData}
-              onClose={() => setPlayerData(null)}
-              showMarkComplete={false} // For free-preview ? no need!
-              isCompleted={false}
+          <div>
+            <img
+              className="w-full h-auto"
+              src={courseData.courseThumbnail}
+              alt="Course illustration"
             />
-          ) : (
-            <div>
-              <img
-                className="w-full h-auto"
-                src={courseData.courseThumbnail}
-                alt="Course illustration"
-              />
-            </div>
-          )}
+          </div>
+
           <div className="p-5">
             <div className="flex items-center gap-2">
               <img
@@ -282,6 +312,15 @@ function CourseDetails() {
           </div>
         </div>
       </div>
+
+      {playerData && (
+        <VideoPlayer
+          lecture={playerData}
+          onClose={() => setPlayerData(null)}
+          showMarkComplete={false} // For free-preview ? no need!
+          isCompleted={false}
+        />
+      )}
       <Footer />
     </>
   ) : (

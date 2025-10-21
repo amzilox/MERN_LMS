@@ -17,7 +17,11 @@ function App() {
   const isEducatorRoute = useMatch("/educator/*");
   return (
     <div className="text-default min-h-screen bg-white">
-      <ToastContainer position="bottom-right" newestOnTop={true} />
+      <ToastContainer
+        position="bottom-right"
+        newestOnTop={true}
+        autoClose={3000}
+      />
       {!isEducatorRoute && <Navbar />}
       <Routes>
         <Route path="/" element={<Home />} />

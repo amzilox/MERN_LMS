@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
-import { useAppContext } from "../../context/AppContext";
+import { useAppConfig } from "../../context/AppContext";
 import { calculateRatings } from "../../utils/courseHelpers";
 import RatingStars from "../common/RatingStars";
 
 function CourseCard({ course }) {
-  const { currency } = useAppContext();
+  const { currency } = useAppConfig();
 
   return (
     <div className="relative group will-change-transform h-full">

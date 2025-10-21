@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
-import { useAppContext } from "../../context/AppContext";
-import { assets, dummyDashboardData } from "../../assets/assets";
+import { useAppConfig } from "../../context/AppContext";
+import { useAuth } from "../../context/AuthContext";
+import { assets } from "../../assets/assets";
 import Loading from "../../components/students/Loading";
+import EmptySection from "../../components/common/EmptySection";
 import { toast } from "react-toastify";
 import axios from "axios";
 
 function Dashboard() {
-  const { currency, isEducator, getToken, backendUrl } = useAppContext();
+  const { currency, backendUrl } = useAppConfig();
+  const { isEducator, getToken } = useAuth();
   const [dashboardData, setDashboardData] = useState(null);
 
   const fetchDashboardData = async () => {
@@ -90,22 +93,34 @@ function Dashboard() {
                 </tr>
               </thead>
               <tbody className="text-sm text-gray-500">
-                {dashboardData.enrolledStudentsData.map((item, index) => (
-                  <tr key={index} className="border-b border-gray-500/20">
-                    <td className="px-4 py-3 text-center sm:table-cell">
-                      {index + 1}
-                    </td>
-                    <td className="md:px-4 px-2 py-3 flex items-center space-x-3">
-                      <img
-                        src={item.student.imageUrl}
-                        alt="Profile"
-                        className="w-9 h-9 rounded-full"
+                {dashboardData.enrolledStudentsData.length === 0 ? (
+                  <tr>
+                    <td colSpan="3" className="p-0">
+                      <EmptySection
+                        imageSrc={assets.cat}
+                        title="No Recent Enrollments"
+                        description="No students have enrolled in your courses recently. Keep promoting your content!"
                       />
-                      <span className="truncate">{item.student.name}</span>
                     </td>
-                    <td className="px-4 py-3 truncate">{item.courseTitle}</td>
                   </tr>
-                ))}
+                ) : (
+                  dashboardData.enrolledStudentsData.map((item, index) => (
+                    <tr key={index} className="border-b border-gray-500/20">
+                      <td className="px-4 py-3 text-center sm:table-cell">
+                        {index + 1}
+                      </td>
+                      <td className="md:px-4 px-2 py-3 flex items-center space-x-3">
+                        <img
+                          src={item.student.imageUrl}
+                          alt="Profile"
+                          className="w-9 h-9 rounded-full"
+                        />
+                        <span className="truncate">{item.student.name}</span>
+                      </td>
+                      <td className="px-4 py-3 truncate">{item.courseTitle}</td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>

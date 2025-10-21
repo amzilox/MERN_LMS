@@ -1,8 +1,9 @@
 import { NavLink } from "react-router-dom";
 import { assets } from "../../assets/assets";
-import { useAppContext } from "../../context/AppContext";
+import { useAuth } from "../../context/AuthContext";
+
 function Sidebar() {
-  const { isEducator } = useAppContext();
+  const { isEducator } = useAuth();
   const menuItems = [
     { name: "Dashboard", path: "/educator", icon: assets.home_icon },
     { name: "Add Course", path: "/educator/add-course", icon: assets.add_icon },

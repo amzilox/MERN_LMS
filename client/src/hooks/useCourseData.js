@@ -1,10 +1,14 @@
 import { useEffect, useCallback, useState } from "react";
-import { useAppContext } from "../context/AppContext";
+import { useAppConfig } from "../context/AppContext";
+import { useAuth } from "../context/AuthContext";
+import { useEnrollments } from "../context/EnrollmentContext";
 import axios from "axios";
 import { toast } from "react-toastify";
 
 export const useCourseData = (courseId, source = "all_courses") => {
-  const { backendUrl, enrolledCourses, userData, getToken } = useAppContext();
+  const { backendUrl } = useAppConfig();
+  const { userData, getToken } = useAuth();
+  const { enrolledCourses } = useEnrollments();
   const [courseData, setCourseData] = useState(null);
   const [initRating, setInitRating] = useState(0);
 
