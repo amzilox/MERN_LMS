@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import humanizeDuration from "humanize-duration";
 
@@ -50,6 +50,7 @@ function Player() {
       lecture: lectureIndex + 1,
     });
   };
+  const handleClose = useCallback(() => setPlayerData(null), []);
 
   if (!courseData) {
     return <Loading />;
@@ -133,7 +134,7 @@ function Player() {
                                         lectureIndex
                                       )
                                     }
-                                    className="text-purple-600 hover:text-purple-700 font-medium text-sm transition-colors"
+                                    className="text-blue-600 hover:text-blue-700 font-medium text-sm transition-colors"
                                   >
                                     Watch
                                   </button>
@@ -186,7 +187,7 @@ function Player() {
       {playerData && (
         <VideoPlayer
           lecture={playerData}
-          onClose={() => setPlayerData(null)}
+          onClose={handleClose}
           showMarkComplete={true}
           onMarkComplete={markLectureCompleted}
           isCompleted={courseProgress?.lectureCompleted?.includes(

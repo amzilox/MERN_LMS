@@ -1,6 +1,6 @@
 import YouTube from "react-youtube";
 import { extractYouTubeId } from "../../utils/VideoHelpers";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { assets } from "../../assets/assets";
 
 const VideoPlayer = ({
@@ -46,9 +46,9 @@ const VideoPlayer = ({
         <video
           className="w-full aspect-video rounded-lg bg-black"
           controls
+          preload="metadata"
           controlsList="nodownload"
           src={lecture.lectureUrl}
-          autoPlay
         >
           <source src={lecture.lectureUrl} type="video/mp4" />
           Your browser does not support the video tag.
@@ -150,4 +150,4 @@ const VideoPlayer = ({
   );
 };
 
-export default VideoPlayer;
+export default React.memo(VideoPlayer);

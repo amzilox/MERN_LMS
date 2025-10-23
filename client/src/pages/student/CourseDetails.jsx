@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useParams } from "react-router-dom";
 import humanizeDuration from "humanize-duration";
 import { useAppConfig } from "../../context/AppContext";
@@ -81,6 +81,8 @@ function CourseDetails() {
     }
   };
 
+  const handleClose = useCallback(() => setPlayerData(null), []);
+
   return courseData ? (
     <>
       <div
@@ -99,11 +101,11 @@ function CourseDetails() {
 
           {showFullDesc ? (
             <p
-              className="pt-4 md:text-base text-small"
+              className="pt-4 md:text-base text-small break-words"
               dangerouslySetInnerHTML={{ __html: courseData.courseDescription }}
             />
           ) : (
-            <p className="pt-4 inline md:text-base text-small">
+            <p className="pt-4 inline md:text-base text-small break-words">
               {(() => {
                 const txt = stripHtml(courseData.courseDescription);
                 return txt.length > 200 ? txt.slice(0, 200) + "..." : txt;
@@ -224,7 +226,7 @@ function CourseDetails() {
               Course Description
             </h3>
             <p
-              className="pt-3 rich-text"
+              className="pt-3 rich-text break-words"
               dangerouslySetInnerHTML={{
                 __html: courseData.courseDescription,
               }}
@@ -271,7 +273,7 @@ function CourseDetails() {
             </div>
             <div className="flex items-center text-sm md:text-default gap-4 pt-2 md:pt-4 text-gray-500">
               <div className="flex items-center gap-1">
-                <img src={assets.star} alt="star icon" />
+                <img src={assets.star} alt="star icon" className="w-5" />
                 <p className="">{calculateRatings(courseData)}</p>
               </div>
 
@@ -316,7 +318,7 @@ function CourseDetails() {
       {playerData && (
         <VideoPlayer
           lecture={playerData}
-          onClose={() => setPlayerData(null)}
+          onClose={handleClose}
           showMarkComplete={false} // For free-preview ? no need!
           isCompleted={false}
         />
