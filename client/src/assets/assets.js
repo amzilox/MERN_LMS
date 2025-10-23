@@ -34,6 +34,7 @@ import patients_icon from "./patients_icon.svg";
 import play_icon from "./play_icon.svg";
 import green_check from "./green_check.svg";
 import lesson_icon from "./lesson_icon.svg";
+
 import cat from "./cat.svg";
 import cat_pana from "./cat_pana.svg";
 import cat_vase from "./cat_vase.svg";
