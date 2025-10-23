@@ -16,15 +16,32 @@ const app = express();
 await connectDB();
 await connectCloudinary();
 
-// Middlewares
+// ✅ Dynamic CORS middleware
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173", // Your local dev
-      "http://localhost:5174", // Backup port
-      "https://lmsfrontend-6qmv0serw-amziloxs-projects.vercel.app", // My production client domain
-      "https://lmsbackend-alpha.vercel.app", // My production domain ( deployed)
-    ],
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "https://lmsbackend-alpha.vercel.app", // my backend domain
+      ];
+
+      // Allow if request has no origin (like Postman) or is from allowed list
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      // ✅ Allow any Vercel subdomain related to your project
+      if (
+        origin.endsWith(".vercel.app") &&
+        (origin.includes("lmsfrontend") || origin.includes("amziloxs-projects"))
+      ) {
+        return callback(null, true);
+      }
+
+      // ❌ Otherwise, block
+      return callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
