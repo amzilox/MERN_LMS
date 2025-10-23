@@ -59,7 +59,7 @@ function MyCourses() {
                 <tr>
                   <td colSpan="4" className="p-0">
                     <EmptySection
-                      imageSrc={assets.cat_vase}
+                      imageSrc={assets.playfull_cat_vase}
                       title="No Courses Created"
                       description="You haven't created any courses yet. Start building your first course and share your knowledge!"
                       actionLabel="Create Your First Course"

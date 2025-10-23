@@ -37,7 +37,7 @@ import lesson_icon from "./lesson_icon.svg";
 
 import cat from "./cat.svg";
 import cat_pana from "./cat_pana.svg";
-import cat_vase from "./cat_vase.svg";
+import playfull_cat_vase from "./playfull_cat_vase.svg";
 import student from "./student.svg";
 
 export const assets = {
@@ -45,7 +45,7 @@ export const assets = {
   cat,
   student,
   cat_pana,
-  cat_vase,
+  playfull_cat_vase,
   green_check,
   search_icon,
   sketch,
