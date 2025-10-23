@@ -1,11 +1,3 @@
-import {
-  BookOpen,
-  Users,
-  Package,
-  Inbox,
-  FileText,
-  TrendingUp,
-} from "lucide-react";
 import { assets } from "../../assets/assets";
 
 function EmptySection({
