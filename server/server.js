@@ -22,6 +22,7 @@ app.use(
     origin: [
       "http://localhost:5173", // Your local dev
       "http://localhost:5174", // Backup port
+      "https://lmsfrontend-6qmv0serw-amziloxs-projects.vercel.app", // My production client domain
       "https://lmsbackend-alpha.vercel.app", // My production domain ( deployed)
     ],
     credentials: true,
