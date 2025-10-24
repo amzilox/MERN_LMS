@@ -1,6 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
+  "license": "MIT",
   "main": "server.js",
   "type": "module",
   "scripts": {
@@ -8,8 +9,7 @@
     "start": "node server.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "amzilox",
   "description": "",
   "dependencies": {
     "@clerk/express": "^1.7.35",
