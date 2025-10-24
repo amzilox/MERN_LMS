@@ -82,6 +82,7 @@ function AddCourse() {
         lecture: newLecture,
       },
     });
+    toast.success("Lecture added successfully!");
 
     setShowLectureModal(false);
     setCurrentChapterId(null);

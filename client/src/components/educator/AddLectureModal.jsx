@@ -104,7 +104,6 @@ const AddLectureModal = ({ isOpen, onClose, onAddLecture }) => {
 
       // Reset and close
       resetModal();
-      toast.success("Lecture added successfully!");
     } catch (error) {
       console.error("Error adding lecture:", error);
       toast.error("Failed to add lecture");
