@@ -34,7 +34,9 @@ app.use(
       // ✅ Allow any Vercel subdomain related to your project
       if (
         origin.endsWith(".vercel.app") &&
-        (origin.includes("lmsfrontend") || origin.includes("amziloxs-projects"))
+        (origin.includes("lmsfrontend") ||
+          origin.includes("amziloxs-projects") ||
+          origin.includes("mindure"))
       ) {
         return callback(null, true);
       }
