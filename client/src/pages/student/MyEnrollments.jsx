@@ -59,7 +59,7 @@ function MyEnrollments() {
 
   return (
     <>
-      <div className="px-8 md:px-36 pt-10 bg-gradient-to-b from-purple-100/70 via-pink-50/30 to-white">
+      <div className="px-8 md:px-36 pt-10 bg-gradient-to-b from-purple-100/70 via-pink-50/30 to-white mb-52">
         <h1 className="text-2xl font-semibold">My Enrollments</h1>
 
         <table className="md:table-auto table-fixed w-full overflow-hidden border mt-10">
