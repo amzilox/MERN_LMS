@@ -32,7 +32,11 @@ function CourseCard({ course }) {
             {course.courseTitle}
           </h3>
 
-          <p className="text-gray-500 text-sm mb-2">{course.educator.name}</p>
+          <p className="text-gray-500 text-sm mb-2">
+            {course.educator?.name?.includes("null")
+              ? course.educator.name.split(" ")[0] // show only the first name
+              : course.educator?.name}
+          </p>
 
           <div className="flex-col justify-between mt-auto pt-2">
             {/* Rating line */}
