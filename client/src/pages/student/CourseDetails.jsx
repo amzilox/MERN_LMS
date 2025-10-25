@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import humanizeDuration from "humanize-duration";
 import { useAppConfig } from "../../context/AppContext";
@@ -29,9 +29,7 @@ function CourseDetails() {
   const { getToken, userData } = useAuth();
 
   const [openSections, setOpenSections] = useState(new Set());
-  const [isAlreadyEnrolled, _] = useState(
-    enrolledCourses?.some((course) => course._id === id)
-  );
+  const [isAlreadyEnrolled, setIsAlreadyEnrolled] = useState(false);
   const [playerData, setPlayerData] = useState(null);
   const [showFullDesc, setShowFullDesc] = useState(false);
 
@@ -82,6 +80,12 @@ function CourseDetails() {
   };
 
   const handleClose = useCallback(() => setPlayerData(null), []);
+
+  useEffect(() => {
+    setIsAlreadyEnrolled(
+      Boolean(enrolledCourses?.some((c) => String(c._id) === String(id)))
+    );
+  }, [enrolledCourses, id]);
 
   return courseData ? (
     <>
