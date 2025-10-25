@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import humanizeDuration from "humanize-duration";
 import { useAppConfig } from "../../context/AppContext";
-import { useCourses } from "../../context/CourseContext";
 
 import { assets } from "../../assets/assets";
 import Loading from "../../components/students/Loading";
@@ -19,13 +18,14 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import VideoPlayer from "../../components/common/VideoPlayer";
 import { useAuth } from "../../context/AuthContext";
+import { useEnrollments } from "../../context/EnrollmentContext";
 
 function CourseDetails() {
   const { id } = useParams();
   const { courseData } = useCourseData(id);
 
   const { backendUrl, currency } = useAppConfig();
-  const { enrolledCourses } = useCourses();
+  const { enrolledCourses } = useEnrollments();
   const { getToken, userData } = useAuth();
 
   const [openSections, setOpenSections] = useState(new Set());
